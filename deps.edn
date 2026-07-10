@@ -1,0 +1,22 @@
+;; GHOST HACKER: TUNING — pure .cljc alignment-puzzle core (ADR-2607023200
+;; addendum 2). No shared-lib dependency (unlike FLOW/HARMONY's
+;; ghosthacker-groove-core) -- TUNING's judgment model (dial-vs-target
+;; distance, no beat grid) is independent of the rhythm titles' timing model.
+{:paths ["src"]
+
+ :deps {org.clojure/clojure {:mvn/version "1.12.0"}}
+
+ :aliases
+ {:test {:extra-paths ["test"]
+         :extra-deps {io.github.cognitect-labs/test-runner
+                      {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+         :main-opts ["-m" "cognitect.test-runner"]}
+  ;; clj-kondo as a Clojars lib (no Homebrew/system install needed).
+  :lint {:extra-deps {clj-kondo/clj-kondo {:mvn/version "2024.09.27"}}
+         :main-opts ["-m" "clj-kondo.main" "--lint" "src" "test"]}
+  ;; Browser host adapter (ADR-2607100900 follow-up (b)): plain reagent,
+  ;; no Web Audio needed -- TUNING has no real-time beat, just nudge +
+  ;; lock-in, same low-complexity end of the host spectrum as ECHOES.
+  :cljs {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.132"}
+                      reagent/reagent           {:mvn/version "1.2.0"}
+                      thheller/shadow-cljs      {:mvn/version "2.28.20"}}}}}

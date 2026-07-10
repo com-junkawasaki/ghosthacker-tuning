@@ -1,0 +1,78 @@
+(ns ghosthacker-tuning.terminal
+  "GHOST HACKER: TUNING -- minimal terminal host adapter (playable prototype).
+
+  Unlike ghosthacker-flow/harmony's terminal prototypes, TUNING has no
+  real-time beat to track -- no `future`/agent thread pool, no wall-clock
+  judging. Just a plain nudge-and-lock REPL loop: Nei nudges a dial by
+  fixed steps (+/-) and locks it in (l) once the 'static' proximity
+  readout (no direction, no exact value -- tuning by ear) sounds right.
+
+  Run: clojure -M -m ghosthacker-tuning.terminal"
+  (:require [clojure.string :as str]
+            [ghosthacker-tuning.core :as core]
+            [ghosthacker-tuning.logs :as logs]))
+
+(def ^:private step 0.05)
+
+(defn- static-pct
+  "distance(dial, target)を0(ぴったり)〜100(遠い)%のstatic表示に変換する。
+   0.5以上のズレは全て100%に頭打ちにする(方向は教えない)。"
+  [dial target]
+  (long (Math/round (* 100 (min 1.0 (/ (Math/abs (double (- dial target))) 0.5))))))
+
+(defn- print-channel! [channel dial]
+  (println (format "-- %s -- static: %d%%  (dial %.2f)"
+                    (name (:label channel)) (static-pct dial (:target channel)) dial)))
+
+(defn- read-command! []
+  (print "[+/-/l/q] > ") (flush)
+  (some-> (read-line) str/trim str/lower-case))
+
+(defn- tune-channel!
+  "1チャンネルぶんの調整ループ。l/空行でロックイン(dialを返す)、q/EOFで
+   打ち切り(nilを返す)。"
+  [channel]
+  (loop [dial core/initial-dial]
+    (print-channel! channel dial)
+    (let [cmd (read-command!)]
+      (cond
+        (nil? cmd) nil
+        (= cmd "q") nil
+        (or (= cmd "l") (= cmd "")) dial
+        (= cmd "+") (recur (core/nudge-dial dial step))
+        (= cmd "-") (recur (core/nudge-dial dial (- step)))
+        :else (do (println "+ / - / l(ock) / q(uit) のいずれかを入力してください。")
+                  (recur dial))))))
+
+(defn- play-loop!
+  "全チャンネルを消化するまでtune-channel!→lock-inを繰り返す。途中で
+   nil(打ち切り)が返ったら、そこまでのstateで終える。"
+  [channels]
+  (loop [state core/initial-state]
+    (if (core/complete? state channels)
+      state
+      (let [channel (core/current-channel state channels)
+            dial (tune-channel! channel)]
+        (if (nil? dial)
+          state
+          (let [next-state (core/lock-in state channels dial)]
+            (println (format " -> %s (combo %d)"
+                              (name (last (:judgments next-state)))
+                              (:combo next-state)))
+            (recur next-state)))))))
+
+(defn -main
+  "Entry point for `clojure -M -m ghosthacker-tuning.terminal`."
+  [& _args]
+  (println "GHOST HACKER: TUNING — quiet-static")
+  (println "各ログのstaticが最小になるようダイヤルを合わせ、l でロックイン。")
+  (println)
+  (let [state (play-loop! logs/quiet-static)
+        result (core/summary state)]
+    (println)
+    (println "=== RESULT ===")
+    (println (format "grade=%s score=%d max-combo=%d accuracy=%.2f"
+                      (name (:grade result))
+                      (:score result)
+                      (:max-combo result)
+                      (double (:accuracy result))))))
