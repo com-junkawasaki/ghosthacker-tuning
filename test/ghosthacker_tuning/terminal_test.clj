@@ -13,8 +13,9 @@
 (def ^:private play-loop! #'terminal/play-loop!)
 
 (defn- silently [thunk]
-  (binding [*out* (java.io.StringWriter.)]
-    (thunk)))
+  (let [result (atom nil)]
+    (with-out-str (reset! result (thunk)))
+    @result))
 
 (defn- close-to? [a b] (< (Math/abs (- (double a) (double b))) 1e-9))
 
