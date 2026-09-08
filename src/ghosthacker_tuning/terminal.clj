@@ -8,7 +8,7 @@
   readout (no direction, no exact value -- tuning by ear) sounds right.
 
   Run: clojure -M -m ghosthacker-tuning.terminal"
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [ghosthacker-tuning.core :as core]
             [ghosthacker-tuning.logs :as logs]))
 
@@ -26,7 +26,7 @@
 
 (defn- read-command! []
   (print "[+/-/l/q] > ") (flush)
-  (some-> (read-line) str/trim str/lower-case))
+  (some-> (read-line) str/trim str/lower))
 
 (defn- tune-channel!
   "1チャンネルぶんの調整ループ。l/空行でロックイン(dialを返す)、q/EOFで
