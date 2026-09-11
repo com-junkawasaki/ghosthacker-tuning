@@ -1,0 +1,11 @@
+{:format :kotoba.cljk-origin/v1
+ :renamed-on "2026-09-11"
+ :decision "adr-2609111500-cljk-rename-all-clojure-source (com-junkawasaki/root 90-docs/adr; owner instruction 2026-09-11)"
+ :rule "value = the extension the file had before the rename. A path ending in .clj.cljk or .cljs.cljk kept it in the name because both platform files existed (or the plain target was taken)."
+ :origins
+ {"src/ghosthacker_tuning/core.cljk" ".cljc"
+  "src/ghosthacker_tuning/logs.cljk" ".cljc"
+  "src/ghosthacker_tuning/terminal.cljk" ".clj"
+  "src/ghosthacker_tuning/web.cljk" ".cljs"
+  "test/ghosthacker_tuning/core_test.cljk" ".cljc"
+  "test/ghosthacker_tuning/terminal_test.cljk" ".clj"}}
