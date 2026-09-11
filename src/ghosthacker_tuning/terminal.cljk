@@ -7,7 +7,7 @@
   fixed steps (+/-) and locks it in (l) once the 'static' proximity
   readout (no direction, no exact value -- tuning by ear) sounds right.
 
-  Run: clojure -M -m ghosthacker-tuning.terminal"
+  Run: kbb -M -m ghosthacker-tuning.terminal"
   (:require [kotoba.lang.text :as str]
             [ghosthacker-tuning.core :as core]
             [ghosthacker-tuning.logs :as logs]))
@@ -62,7 +62,7 @@
             (recur next-state)))))))
 
 (defn -main
-  "Entry point for `clojure -M -m ghosthacker-tuning.terminal`."
+  "Entry point for `kbb -M -m ghosthacker-tuning.terminal`."
   [& _args]
   (println "GHOST HACKER: TUNING — quiet-static")
   (println "各ログのstaticが最小になるようダイヤルを合わせ、l でロックイン。")
