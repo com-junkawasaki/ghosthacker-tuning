@@ -24,7 +24,7 @@ Ghost Hacker ゲームポートフォリオ第6弾。設計は
 
 ## 実装範囲
 
-`src/ghosthacker_tuning/core.cljc` — pure、host-free。判定/state核:
+`src/ghosthacker_tuning/core.cljk` — pure、host-free。判定/state核:
 
 - `nudge-dial` — ダイヤルを`[0.0, 1.0]`にclampしながら動かす
 - `judge-alignment` — ダイヤルと目標値のズレ(絶対値)を`:perfect`/`:good`/
@@ -35,16 +35,16 @@ Ghost Hacker ゲームポートフォリオ第6弾。設計は
   進める、全チャンネル消化判定
 - `accuracy`/`grade`/`summary` — リザルト画面向けのサマリ
 
-`src/ghosthacker_tuning/logs.cljc` — サンプルの完結したパズル
+`src/ghosthacker_tuning/logs.cljk` — サンプルの完結したパズル
 （`quiet-static`、4チャンネル）。
 
-**プレイ可能な最小プロトタイプ**として `src/ghosthacker_tuning/terminal.clj`
+**プレイ可能な最小プロトタイプ**として `src/ghosthacker_tuning/terminal.cljk`
 がある。FLOW/HARMONYと違い実時間のビート判定が無いため、`future`/agent
 スレッドプールを一切使わない素朴なnudge&lockの REPLループ。目標値は
 直接表示せず、`static`（近さのみを示す0〜100%のノイズ量、方向は教えない）
 だけを手がかりに、耳で合わせるような手触りにしている。
 
-**ブラウザで遊べるホストアダプタ**が `src/ghosthacker_tuning/web.cljs`
+**ブラウザで遊べるホストアダプタ**が `src/ghosthacker_tuning/web.cljk`
 （reagent、ADR-2607100900 follow-up (b)）: TUNINGはリアルタイムの
 ビート判定が無いため、ECHOESと同じ低複雑度側の構成（Web Audio不要、
 ボタン駆動のnudge/lock UI）で足りる。
