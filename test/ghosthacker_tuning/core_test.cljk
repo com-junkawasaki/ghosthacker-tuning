@@ -1,5 +1,5 @@
 (ns ghosthacker-tuning.core-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [ghosthacker-tuning.core :as core]))
 
 (deftest nudge-dial-clamps
